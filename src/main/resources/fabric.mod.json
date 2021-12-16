@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "speaktome",
+  "version": "${version}",
+  "name": "SpeakToMe",
+  "description": "Voice-activated commands in Minecraft.",
+  "authors": [
+    "AMereBagatelle"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/speaktome/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "io.github.amerebagatelle.speaktome.client.SpeakToMeClient"
+    ]
+  },
+  "mixins": [
+    "speaktome.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": "1.18.1"
+  }
+}
