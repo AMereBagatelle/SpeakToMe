@@ -6,6 +6,8 @@ import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.LiveSpeechRecognizer;
 import edu.cmu.sphinx.api.SpeechResult;
 import edu.cmu.sphinx.result.Result;
+import edu.cmu.sphinx.util.props.ConfigurationManager;
+import edu.cmu.sphinx.util.props.ConfigurationManagerUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,6 +26,7 @@ import net.minecraft.util.Identifier;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 @Environment(EnvType.CLIENT)
@@ -32,6 +35,14 @@ public class SpeakToMeClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        // Disable sphinx4 logger
+        Logger cmRootLogger = Logger.getLogger("default.config");
+        cmRootLogger.setLevel(java.util.logging.Level.OFF);
+        String conFile = System.getProperty("java.util.logging.config.file");
+        if (conFile == null) {
+            System.setProperty("java.util.logging.config.file", "ignoreAllSphinx4LoggingOutput");
+        }
+
         SpeechHandler.loadCommands();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> SpeechHandler.tick());
