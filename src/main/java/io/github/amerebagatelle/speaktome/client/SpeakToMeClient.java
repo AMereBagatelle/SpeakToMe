@@ -11,7 +11,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -43,6 +46,10 @@ public class SpeakToMeClient implements ClientModInitializer {
 
         speechRecognitionThread = new SpeechRecognitionThread(recognizer);
         speechRecognitionThread.start();
+
+        ClientPlayConnectionEvents.JOIN.register((networkHandler, packetSender, client) -> speechRecognitionThread.active = true);
+
+        ClientPlayConnectionEvents.DISCONNECT.register((networkHandler, client) -> speechRecognitionThread.active = false);
     }
 
     public LiveSpeechRecognizer rebuildRecognizer() {
